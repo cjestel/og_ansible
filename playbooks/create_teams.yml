@@ -18,6 +18,10 @@
         existing_team_id: "{{ team_id.json.data | map(attribute='id') | list }}"
         existing_team_name: "{{ team_id.json.data | map(attribute='name') | list }}"
 
+    - name: "Ansible | Print existing_team_name"
+      debug:
+        msg: "existing_team_name: {{ existing_team_name }}"
+
     - name: create team if it doesnt exist
       uri:
         method: POST
@@ -30,7 +34,7 @@
           description: "{{ item.description | default(omit) }}"
           members: "{{ item.members | default(omit) }}"
         body_format: json
-        return_json: true
+        return_content: true
         status_code: 201
       when: item.name not in existing_team_name
       with_items:
